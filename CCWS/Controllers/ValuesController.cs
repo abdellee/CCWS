@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IBM.WatsonDeveloperCloud.CompareComply.v1;
+using IBM.WatsonDeveloperCloud.CompareComply.v1.Model;
 using IBM.WatsonDeveloperCloud.Util;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,14 +41,14 @@ namespace CCWS.Controllers
 
             service = new CompareComplyService(tokenOptions, versionDate);
 
-
+            ClassifyReturn elementClassificationResult = null;
             using (FileStream fs = System.IO.File.OpenRead(contract_a))
             {
-                var elementClassificationResult = service.ClassifyElements(fs);
+                elementClassificationResult = service.ClassifyElements(fs);
 
             }
-
-            return fname;
+            if (elementClassificationResult == null) return fname;
+            return elementClassificationResult.ResponseJson;
         }
         //// GET api/values/5
         //[HttpGet("{id}")]
